@@ -3,3 +3,4 @@
 | Ciclo | Prueba escrita | Red: ¿por qué falló? | Green: ¿qué cambiaste? | Refactor realizado |
 | :---: | :--- | :--- | :--- | :--- |
 | **1** | `subtotalDeDosProductosSumaSusPrecios` | No compilaba: las clases `Producto` y `CalculadoraPedido` no existían. | Se creó `Producto` (record) y `CalculadoraPedido.calcularSubtotal` sumando precios con Streams. | Métodos auxiliares `soles()` y `producto()` en la clase de prueba para evitar repetir `new BigDecimal`. |
+| **2** | `subtotalMultiplicaPrecioPorCantidad`<br>`subtotalDeListaVaciaEsCero` | No multiplicaba precio por cantidad (devolvió 35.50 en vez de 81.00). La lista vacía devolvió escala 0 (`<0>`) cuando se esperaba `<0.00>`. | Se multiplicó `precio.multiply(BigDecimal.valueOf(cantidad))` y se aplicó `.setScale(2, RoundingMode.HALF_UP)` al subtotal acumulado. | Código conciso con Stream y función lambda clara; preservada la precisión de escala requerida por RF5. |
