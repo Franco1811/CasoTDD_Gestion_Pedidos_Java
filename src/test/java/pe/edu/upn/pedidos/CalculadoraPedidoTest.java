@@ -54,4 +54,13 @@ class CalculadoraPedidoTest {
     void aplicarDescuentoRestaElPorcentaje(BigDecimal subtotal, BigDecimal porcentaje, BigDecimal esperado) {
         assertEquals(esperado, calc.aplicarDescuento(subtotal, porcentaje));
     }
+
+    @ParameterizedTest(name = "Base {0} -> IGV {1}")
+    @CsvSource({
+            "100.00, 18.00",
+            "90.00, 16.20"
+    })
+    void calcularImpuestoAplica18PorCiento(BigDecimal baseImponible, BigDecimal esperado) {
+        assertEquals(esperado, calc.calcularImpuesto(baseImponible));
+    }
 }
