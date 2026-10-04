@@ -24,4 +24,15 @@ public class CalculadoraPedido {
     public BigDecimal calcularImpuesto(BigDecimal baseImponible) {
         return baseImponible.multiply(TASA_IGV).setScale(2, RoundingMode.HALF_UP);
     }
+
+    public BigDecimal calcularTotal(List<Producto> productos, BigDecimal porcentaje) {
+        BigDecimal subtotal = calcularSubtotal(productos);
+        BigDecimal baseImponible = aplicarDescuento(subtotal, porcentaje);
+        BigDecimal impuesto = calcularImpuesto(baseImponible);
+        return baseImponible.add(impuesto).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public BigDecimal calcularTotal(List<Producto> productos) {
+        return calcularTotal(productos, BigDecimal.ZERO);
+    }
 }
