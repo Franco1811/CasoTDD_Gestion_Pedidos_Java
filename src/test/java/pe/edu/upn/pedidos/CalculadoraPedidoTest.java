@@ -3,11 +3,13 @@ package pe.edu.upn.pedidos;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CalculadoraPedidoTest {
 
@@ -78,5 +80,32 @@ class CalculadoraPedidoTest {
                 producto("Lapiz", "11.11", 3)
         );
         assertEquals(soles("39.33"), calc.calcularTotal(productos));
+    }
+
+    @Test
+    void precioNegativoLanzaExcepcion() {
+        List<Producto> productos = List.of(
+                producto("Producto Invalido", "-5.00", 1)
+        );
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> calc.calcularSubtotal(productos));
+        assertEquals("El precio no puede ser negativo", ex.getMessage());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, -2})
+    void cantidadNoPositivaLanzaExcepcion(int cantidad) {
+        List<Producto> productos = List.of(
+                new Producto("Producto Invalido", soles("10.00"), cantidad)
+        );
+        assertThrows(IllegalArgumentException.class,
+                () -> calc.calcularSubtotal(productos));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"-1", "101"})
+    void descuentoFueraDeRangoLanzaExcepcion(String porcentaje) {
+        assertThrows(IllegalArgumentException.class,
+                () -> calc.aplicarDescuento(soles("100.00"), soles(porcentaje)));
     }
 }
